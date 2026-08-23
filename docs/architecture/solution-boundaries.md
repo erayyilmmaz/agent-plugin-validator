@@ -115,7 +115,7 @@ The CLI may depend on Core. Core may never depend on CLI.
 | --- | --- | --- |
 | Finding/report/component-status types and public namespace | APV-2.2 | These contracts must first reflect APV-1.1 and APV-1.3 exactly. |
 | Rule registry and specification-reference representation | APV-2.3 | It should follow the finalized finding contract. |
-| Fixture taxonomy, helpers, temporary directories, and test-data safety conventions | APV-2.4 | It must align with the package-reader boundary. |
+| Fixture taxonomy, helpers, temporary directories, and test-data safety conventions | APV-2.4 | Defined by [fixture-and-test-helper-contract.md](fixture-and-test-helper-contract.md); concrete assets/helpers still wait for the package-reader implementation. |
 | Target framework, solution scaffold, parser/schema/CLI/test packages, and package versions | First implementation task after APV-2 | Choose maintained packages with current evidence, not a planning-time assumption. |
 | Default safe filesystem reader, limits, canonicalization, and symlink behavior | APV-3 | These require implementation-specific cross-platform checks. |
 
