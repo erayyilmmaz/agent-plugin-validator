@@ -106,6 +106,44 @@ public sealed class SafePackageReader
         }
     }
 
+    public PackageReadResult<string> GetContainedDirectory(string? relativePath)
+    {
+        lock (sync)
+        {
+            var segmentsResult = TrySplitRelativePath(relativePath);
+            if (!segmentsResult.IsSuccess)
+            {
+                return PackageReadResult<string>.Fail(segmentsResult.Failure!);
+            }
+
+            var currentPath = ResolvedRootPath;
+            foreach (var segment in segmentsResult.Value!)
+            {
+                currentPath = Path.GetFullPath(Path.Combine(currentPath, segment));
+                if (!IsContained(currentPath))
+                {
+                    return PackageReadResult<string>.Fail(Failure(PackageReadFailureCode.PathEscapesRoot, "The requested path resolves outside the plugin root.", relativePath));
+                }
+
+                var linkResult = TryResolveLinkWithinRoot(currentPath, relativePath);
+                if (!linkResult.IsSuccess)
+                {
+                    return PackageReadResult<string>.Fail(linkResult.Failure!);
+                }
+
+                currentPath = linkResult.Value!;
+                if (!File.Exists(currentPath) && !Directory.Exists(currentPath))
+                {
+                    return PackageReadResult<string>.Fail(Failure(PackageReadFailureCode.PathNotFound, "The requested package path does not exist.", relativePath));
+                }
+            }
+
+            return Directory.Exists(currentPath)
+                ? PackageReadResult<string>.Success(currentPath)
+                : PackageReadResult<string>.Fail(Failure(PackageReadFailureCode.NotRegularFile, "The requested package path is not a directory.", relativePath));
+        }
+    }
+
     private PackageReadResult<byte[]> ReadBytesLocked(string? relativePath)
     {
         var pathResult = TryResolveContainedRegularFile(relativePath);

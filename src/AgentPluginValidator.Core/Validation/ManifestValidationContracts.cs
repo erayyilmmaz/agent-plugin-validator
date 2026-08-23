@@ -24,7 +24,9 @@ public enum FindingSeverity
 public enum FindingComponent
 {
     Package,
-    Manifest
+    Manifest,
+    Skills,
+    Skill
 }
 
 public enum PackageFormat

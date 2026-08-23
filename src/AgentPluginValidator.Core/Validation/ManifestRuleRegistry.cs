@@ -30,6 +30,11 @@ internal static class ManifestRuleRegistry
                     "V0",
                     "Applicability and initial decision tree",
                     PolicyUrl)),
+            "APV-SKILL-001" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Plugins Specification", "1.0.0", "§4.1; §7.1", PluginSpecUrl, explanation, suggestedFix),
+            "APV-SKILL-002" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "SKILL.md format", "https://agentskills.io/specification", explanation, suggestedFix),
+            "APV-SKILL-003" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "name field", "https://agentskills.io/specification", explanation, suggestedFix),
+            "APV-SKILL-004" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "frontmatter, name field", "https://agentskills.io/specification", explanation, suggestedFix),
+            "APV-SKILL-005" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "frontmatter, description field", "https://agentskills.io/specification", explanation, suggestedFix),
             _ => throw new ArgumentOutOfRangeException(nameof(ruleId), ruleId, "Unknown manifest rule ID.")
         };
 
@@ -52,4 +57,8 @@ internal static class ManifestRuleRegistry
                 "1.0.0",
                 locator,
                 PluginSpecUrl));
+
+    private static ValidationFinding SkillFinding(string ruleId, FindingSeverity severity, string title, string version, string locator, string url, string explanation, string suggestedFix) => new(
+        ruleId, severity, FindingComponent.Skill, "", explanation, suggestedFix,
+        new SpecificationReference(title == "Agent Plugins Specification" ? "APV-SPEC-PLUGIN-1.0.0" : "APV-SPEC-SKILLS", title, version, locator, url));
 }
