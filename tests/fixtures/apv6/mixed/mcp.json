@@ -1,0 +1,36 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "valid": { "type": "stdio", "command": "server" },
+    "closed-variant": { "type": "stdio", "command": "server", "url": "https://example.test" },
+    "command": { "type": "stdio", "command": "npm run start" },
+    "paths-and-env": {
+      "type": "stdio",
+      "command": "server",
+      "args": ["ok", 1],
+      "cwd": "${PLUGIN_ROOT}/../outside",
+      "env": { "PLUGIN_ROOT": "x", "API_KEY": "not-allowed" }
+    },
+    "remote-url": { "type": "streamable-http", "url": "http://example.test/mcp#fragment" },
+    "headers": {
+      "type": "streamable-http",
+      "url": "https://api.example.test/mcp",
+      "headers": { "X-Tenant": "${PLUGIN_ROOT}" }
+    },
+    "duplicate-headers": {
+      "type": "streamable-http",
+      "url": "https://api.example.test/mcp",
+      "headers": { "X-Tenant": "one", "x-tenant": "two" }
+    },
+    "secret-header": {
+      "type": "sse",
+      "url": "https://api.example.test/sse",
+      "headers": { "Authorization": "Bearer fixed-token" }
+    },
+    "secret-env": {
+      "type": "stdio",
+      "command": "server",
+      "env": { "TOKEN": "fixed-token" }
+    }
+  }
+}

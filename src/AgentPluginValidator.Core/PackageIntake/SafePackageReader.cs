@@ -144,6 +144,42 @@ public sealed class SafePackageReader
         }
     }
 
+    /// <summary>
+    /// Checks a plugin-relative path syntactically and follows any existing links
+    /// without opening, executing, or requiring a final file to exist.
+    /// </summary>
+    public PackageReadResult<string> ValidateContainedPluginRelativePath(string? relativePath)
+    {
+        lock (sync)
+        {
+            var segmentsResult = TrySplitRelativePath(relativePath);
+            if (!segmentsResult.IsSuccess)
+            {
+                return PackageReadResult<string>.Fail(segmentsResult.Failure!);
+            }
+
+            var currentPath = ResolvedRootPath;
+            foreach (var segment in segmentsResult.Value!)
+            {
+                currentPath = Path.GetFullPath(Path.Combine(currentPath, segment));
+                if (!IsContained(currentPath))
+                {
+                    return PackageReadResult<string>.Fail(Failure(PackageReadFailureCode.PathEscapesRoot, "The requested path resolves outside the plugin root.", relativePath));
+                }
+
+                var linkResult = TryResolveLinkWithinRoot(currentPath, relativePath);
+                if (!linkResult.IsSuccess)
+                {
+                    return PackageReadResult<string>.Fail(linkResult.Failure!);
+                }
+
+                currentPath = linkResult.Value!;
+            }
+
+            return PackageReadResult<string>.Success(currentPath);
+        }
+    }
+
     private PackageReadResult<byte[]> ReadBytesLocked(string? relativePath)
     {
         var pathResult = TryResolveContainedRegularFile(relativePath);

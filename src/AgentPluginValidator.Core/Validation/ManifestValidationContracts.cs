@@ -26,7 +26,9 @@ public enum FindingComponent
     Package,
     Manifest,
     Skills,
-    Skill
+    Skill,
+    Mcp,
+    McpServer
 }
 
 public enum PackageFormat

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "local": {
+      "type": "stdio",
+      "command": "./bin/server",
+      "args": ["--state", "${PLUGIN_DATA}/local"],
+      "env": { "CONFIG": "${PLUGIN_ROOT}/config.json" },
+      "cwd": "${PLUGIN_ROOT}/runtime"
+    },
+    "remote": {
+      "type": "streamable-http",
+      "url": "https://api.example.test/mcp",
+      "headers": { "X-Tenant": "public-tenant" }
+    },
+    "legacy": {
+      "type": "sse",
+      "url": "http://127.0.0.1:3000/sse"
+    }
+  }
+}

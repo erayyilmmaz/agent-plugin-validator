@@ -35,6 +35,19 @@ internal static class ManifestRuleRegistry
             "APV-SKILL-003" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "name field", "https://agentskills.io/specification", explanation, suggestedFix),
             "APV-SKILL-004" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "frontmatter, name field", "https://agentskills.io/specification", explanation, suggestedFix),
             "APV-SKILL-005" => SkillFinding(ruleId, FindingSeverity.Error, "Agent Skills Specification", "checked 2026-08-23", "frontmatter, description field", "https://agentskills.io/specification", explanation, suggestedFix),
+            "APV-COMPONENT-002" => McpFinding(ruleId, FindingComponent.Mcp, "§6.1–§6.2; §7.2.1", explanation, suggestedFix),
+            "APV-MCP-001" => McpFinding(ruleId, FindingComponent.Mcp, "§7.2.1–§7.2.2", explanation, suggestedFix),
+            "APV-MCP-002" => McpFinding(ruleId, FindingComponent.Mcp, "§7.2.1–§7.2.2", explanation, suggestedFix),
+            "APV-CROSS-001" => McpFinding(ruleId, FindingComponent.Mcp, "§7.2.2; §10.1", explanation, suggestedFix),
+            "APV-MCP-003" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-010" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-011" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-012" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1; §9.2", explanation, suggestedFix),
+            "APV-MCP-013" => McpFinding(ruleId, FindingComponent.McpServer, "§9.2", explanation, suggestedFix),
+            "APV-MCP-020" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-021" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-022" => McpFinding(ruleId, FindingComponent.McpServer, "§7.2.1", explanation, suggestedFix),
+            "APV-MCP-023" => McpFinding(ruleId, FindingComponent.McpServer, "§9.2", explanation, suggestedFix),
             _ => throw new ArgumentOutOfRangeException(nameof(ruleId), ruleId, "Unknown manifest rule ID.")
         };
 
@@ -61,4 +74,8 @@ internal static class ManifestRuleRegistry
     private static ValidationFinding SkillFinding(string ruleId, FindingSeverity severity, string title, string version, string locator, string url, string explanation, string suggestedFix) => new(
         ruleId, severity, FindingComponent.Skill, "", explanation, suggestedFix,
         new SpecificationReference(title == "Agent Plugins Specification" ? "APV-SPEC-PLUGIN-1.0.0" : "APV-SPEC-SKILLS", title, version, locator, url));
+
+    private static ValidationFinding McpFinding(string ruleId, FindingComponent component, string locator, string explanation, string suggestedFix) => new(
+        ruleId, FindingSeverity.Error, component, "mcp.json", explanation, suggestedFix,
+        new SpecificationReference("APV-SPEC-PLUGIN-1.0.0", "Agent Plugins Specification", "1.0.0", locator, PluginSpecUrl));
 }
