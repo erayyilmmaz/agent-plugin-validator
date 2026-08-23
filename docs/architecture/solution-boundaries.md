@@ -8,9 +8,9 @@ verified: 2026-08-23
 
 ## Decision
 
-APV V0 will use a .NET/C# solution with a reusable validation core, a thin local CLI host, and separate test projects. This document defines their boundaries before any `.sln`, `.csproj`, source directory, parser package, or fixture tree is scaffolded.
+APV V0 uses a .NET/C# solution with a reusable validation core, a thin local CLI host, and separate test projects. APV-3 has now scaffolded the Core and Core.Tests projects needed for safe package intake; the CLI project remains uncreated.
 
-The current checkout contains documentation only. The local development host has .NET SDK `10.0.400`, but this document does **not** commit a target framework, package version, test framework, CLI library, JSON-schema library, YAML library, or final filesystem layout. Those decisions require APV-2.2 through APV-2.4 evidence.
+The local development host has .NET SDK `10.0.400`. APV-3 selects `net10.0` and the xUnit template's current test packages only for Core package-reader tests. CLI, JSON-schema, YAML, and rendering package choices remain deferred to the task that implements them.
 
 ## Intended solution shape
 
@@ -28,7 +28,10 @@ AgentPluginValidator.sln
 └── docs/
 ```
 
-Project names and root folders are reserved to make future work unambiguous. They are created only when a later implementation task explicitly scaffolds them.
+`AgentPluginValidator.sln`, `AgentPluginValidator.Core`,
+`AgentPluginValidator.Core.Tests`, and `tests/fixtures/apv3` now exist as the
+APV-3 implementation scope. `AgentPluginValidator.Cli` and CLI tests remain
+reserved until their assigned task.
 
 ## Dependency direction
 
@@ -116,7 +119,8 @@ The CLI may depend on Core. Core may never depend on CLI.
 | Finding/report/component-status types and public namespace | APV-2.2 | These contracts must first reflect APV-1.1 and APV-1.3 exactly. |
 | Rule registry and specification-reference representation | APV-2.3 | It should follow the finalized finding contract. |
 | Fixture taxonomy, helpers, temporary directories, and test-data safety conventions | APV-2.4 | Defined by [fixture-and-test-helper-contract.md](fixture-and-test-helper-contract.md); concrete assets/helpers still wait for the package-reader implementation. |
-| Target framework, solution scaffold, parser/schema/CLI/test packages, and package versions | First implementation task after APV-2 | Choose maintained packages with current evidence, not a planning-time assumption. |
+| Target framework, solution scaffold, and Core test packages | APV-3 | `net10.0`, solution/Core/Core.Tests, and the SDK xUnit template were selected from the verified local .NET 10.0.400 environment. |
+| Parser/schema/CLI packages and package versions | Their implementation task | Choose maintained packages with current evidence, not a planning-time assumption. |
 | Default safe filesystem reader, limits, canonicalization, and symlink behavior | APV-3 | These require implementation-specific cross-platform checks. |
 
 ## Acceptance trace

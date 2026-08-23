@@ -158,9 +158,9 @@ need a runnable fixture plugin to verify presentation or exit-code mapping.
 
 ## Deferred implementation
 
-- The first Core implementation task selects the test framework, fixture
-  metadata syntax, actual directory layout, test runner, and temporary-root
-  APIs with current .NET evidence.
+- APV-3 selected `net10.0`, the xUnit template, `tests/fixtures/apv3`, and a
+  unique temporary-root helper for package-reader coverage. Fixture metadata
+  syntax beyond APV-3's directly asserted reader cases remains deferred.
 - APV-3 defines the package-reader seam and containment implementation used by
   the controlled reader and materialized-fixture tests.
 - APV-4 through APV-6 add only the fixtures needed by their rule scopes.
