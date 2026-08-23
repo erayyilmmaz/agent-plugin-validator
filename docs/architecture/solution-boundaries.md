@@ -8,7 +8,7 @@ verified: 2026-08-23
 
 ## Decision
 
-APV V0 uses a .NET/C# solution with a reusable validation core, a thin local CLI host, and separate test projects. APV-3 has now scaffolded the Core and Core.Tests projects needed for safe package intake; the CLI project remains uncreated.
+APV V0 uses a .NET/C# solution with a reusable validation core, a thin local CLI host, and separate test projects. APV-7 has now scaffolded the Core, CLI, Core.Tests, and CLI.Tests projects; the CLI remains a presentation host only.
 
 The local development host has .NET SDK `10.0.400`. APV-3 selects `net10.0` and the xUnit template's current test packages only for Core package-reader tests. CLI, JSON-schema, YAML, and rendering package choices remain deferred to the task that implements them.
 
@@ -29,9 +29,9 @@ AgentPluginValidator.sln
 ```
 
 `AgentPluginValidator.sln`, `AgentPluginValidator.Core`,
-`AgentPluginValidator.Core.Tests`, and `tests/fixtures/apv3` now exist as the
-APV-3 implementation scope. `AgentPluginValidator.Cli` and CLI tests remain
-reserved until their assigned task.
+`AgentPluginValidator.Cli`, `AgentPluginValidator.Core.Tests`, and
+`AgentPluginValidator.Cli.Tests` now exist. APV-7 adds no CLI validation rules
+or runtime package behavior; it composes and renders Core results.
 
 ## Dependency direction
 
