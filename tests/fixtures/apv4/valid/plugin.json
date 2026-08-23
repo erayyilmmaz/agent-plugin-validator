@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "valid.plugin",
+  "version": "not-required-to-be-semver",
+  "description": "A valid static fixture.",
+  "author": {
+    "name": "Fixture Author",
+    "email": "author@example.test",
+    "url": "not-required-to-be-a-valid-url"
+  },
+  "homepage": "not-required-to-be-a-valid-url",
+  "repository": "not-required-to-be-a-valid-url",
+  "license": "not-required-to-be-spdx",
+  "keywords": ["fixture", "portable"],
+  "extensions": {
+    "com.example.client": {
+      "unvalidated": true
+    }
+  }
+}

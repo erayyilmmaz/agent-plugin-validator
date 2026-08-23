@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "Bad--Name",
+  "keywords": ["valid", 7],
+  "author": {
+    "name": "Fixture Author",
+    "unexpected": true
+  }
+}
