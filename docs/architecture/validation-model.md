@@ -90,7 +90,7 @@ only display them.
 | `ExpectedValue` | No | Safe, concise expected shape or value. |
 | `Explanation` | Yes | User-facing reason this affects portable conformance. |
 | `SuggestedFix` | Yes | Actionable corrective guidance; it never requests command execution. |
-| `SpecificationReference` | Yes | The normative source title, stable section identifier, and source URL already recorded by the project. The validator does not fetch the URL. |
+| `SpecificationReference` | Yes | A source title, version/snapshot, stable section identifier, and canonical locator. The locator is an official URL for an external specification or a stable APV policy URI for a product-level rule. The validator does not fetch either form. |
 
 `FindingLocation` has `FilePath`, optional positive `Line`, optional positive
 `Column`, and optional logical entry identifier. It must never contain an
