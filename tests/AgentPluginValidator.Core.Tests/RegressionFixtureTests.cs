@@ -10,6 +10,7 @@ public sealed class RegressionFixtureTests
     [Theory]
     [InlineData("minimal-valid", ValidationStatus.Valid, ComponentStatus.Valid, ComponentStatus.Absent, ComponentStatus.Absent, null)]
     [InlineData("full-valid", ValidationStatus.Valid, ComponentStatus.Valid, ComponentStatus.Valid, ComponentStatus.Valid, null)]
+    [InlineData("client-extensions", ValidationStatus.Valid, ComponentStatus.Valid, ComponentStatus.Absent, ComponentStatus.Absent, null)]
     [InlineData("invalid-manifest", ValidationStatus.Invalid, ComponentStatus.Invalid, ComponentStatus.NotEvaluated, ComponentStatus.NotEvaluated, "APV-MANIFEST-004")]
     [InlineData("invalid-skill", ValidationStatus.Invalid, ComponentStatus.Valid, ComponentStatus.Invalid, ComponentStatus.Valid, "APV-SKILL-004")]
     [InlineData("invalid-mcp", ValidationStatus.Invalid, ComponentStatus.Valid, ComponentStatus.Valid, ComponentStatus.Invalid, "APV-MCP-001")]
@@ -68,6 +69,22 @@ public sealed class RegressionFixtureTests
             var mode = File.GetUnixFileMode(file);
             Assert.Equal(UnixFileMode.None, mode & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute));
         }
+    }
+
+    [Fact]
+    public void Ignores_client_extension_namespaces_without_reading_or_interpreting_their_contents()
+    {
+        var root = Path.Combine(FixtureRoot(), "client-extensions");
+        var creation = SafePackageReader.TryCreate(root);
+        Assert.True(creation.IsSuccess);
+
+        var report = validator.Validate(creation.Reader!);
+
+        Assert.Equal(ValidationStatus.Valid, report.OverallStatus);
+        Assert.Empty(report.Findings);
+        Assert.Equal(
+            new FileInfo(Path.Combine(root, "plugin.json")).Length,
+            creation.Reader.TotalBytesRead);
     }
 
     private ValidationReport Validate(string fixture) => ValidateAt(Path.Combine(FixtureRoot(), fixture));

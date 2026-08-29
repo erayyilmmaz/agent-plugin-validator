@@ -7,6 +7,7 @@ plugin, command, script, or MCP server.
 | --- | --- | --- |
 | `minimal-valid` | `Valid` | Canonical minimal manifest; optional components absent |
 | `full-valid` | `Valid` | Valid manifest, Skill, stdio, streamable-http, and sse |
+| `client-extensions` | `Valid` | Copilot and unknown client namespaces are inert and uninterpreted |
 | `invalid-manifest` | `Invalid` | Fatal manifest stops Skills/MCP discovery |
 | `invalid-skill` | `Invalid` | Invalid Skill leaves valid MCP visible |
 | `invalid-mcp` | `Invalid` | Invalid top-level MCP leaves valid Skill visible |

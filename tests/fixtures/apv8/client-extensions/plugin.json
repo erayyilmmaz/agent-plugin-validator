@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "client-extensions",
+  "extensions": {
+    "com.github.copilot": {
+      "arbitraryClientData": ["not", "portable", "semantics"]
+    },
+    "com.example.other-client": {
+      "alsoUninterpreted": true
+    }
+  }
+}

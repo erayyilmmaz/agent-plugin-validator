@@ -17,6 +17,7 @@ executed.
 | --- | --- | --- |
 | `minimal-valid` | Valid | Minimal canonical manifest; optional components absent |
 | `full-valid` | Valid | Manifest, Skill, stdio, streamable HTTP, and SSE all valid |
+| `client-extensions` | Valid | Canonical manifest with Copilot and unknown extension namespaces; client files remain unread and inert |
 | `invalid-manifest` | Invalid | `APV-MANIFEST-004`; Skills/MCP not evaluated |
 | `invalid-skill` | Invalid | `APV-SKILL-004`; valid MCP remains visible |
 | `invalid-mcp` | Invalid | `APV-MCP-001`; valid Skill remains visible |
@@ -35,6 +36,12 @@ The regression test serializes the complete report signature: overall status,
 ordered components and entry counts, ordered finding identity/location/source,
 and severity totals. It validates repeated fresh-reader runs over the same
 fixture and requires an identical signature.
+
+The `client-extensions` fixture has a `com.github.copilot/` hook file and a
+non-executable shell-script-shaped data file. Its test asserts that only root
+`plugin.json` bytes are read: APV does not discover, interpret, or activate
+client extension content. A second unknown reverse-domain namespace in
+`extensions` proves that portable validation does not assign vendor semantics.
 
 Run the required local quality gate:
 

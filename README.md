@@ -6,6 +6,11 @@ Agent Plugin Validator (APV) is a deterministic local CLI for checking whether
 a directory conforms to the portable **Agent Plugins Specification 1.0.0**.
 It reports explainable, spec-referenced findings without activating the plugin.
 
+Agent Plugins 1.0 is generally available in VS Code, Copilot CLI, the GitHub
+Copilot SDK, and the Copilot app; APV validates the portable standard shared by
+those clients, not their client-specific plugin formats. [GitHub’s rollout
+announcement](https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/)
+
 > **Safety guarantee: No plugin-provided code is executed.** APV does not run
 > scripts, commands, MCP servers, package managers, builds, or network
 > connections while validating a package.
@@ -80,11 +85,16 @@ ERROR [APV-MCP-022] McpServer (mcp.json#mcpServers.remote)
 
 ## Portable conformance, not vendor validation
 
-APV validates only the portable Agent Plugins 1.0.0 format. If it recognizes a
-vendor-only package, such as a Codex-specific package without a portable root
-manifest, it returns `NOT_APPLICABLE` with `APV-FORMAT-001`. That is not a
-portable conformance error, and APV does **not** parse, execute, or validate the
-vendor’s configuration format.
+APV validates only the portable Agent Plugins 1.0.0 format. A schema-less root
+Copilot manifest or an explicit Codex, Claude, or legacy OpenPlugin marker is
+recognized as non-portable and returns `NOT_APPLICABLE` with `APV-FORMAT-001`.
+That is not a portable conformance error, and APV does **not** parse, execute,
+or validate the vendor’s configuration format.
+
+A canonical portable package can still include `com.github.copilot/` and
+reverse-domain `extensions` data. APV ignores those client namespaces without
+interpreting them; portable Skills and `mcp.json` remain the only supported
+component types. [VS Code format documentation](https://code.visualstudio.com/docs/agent-customization/agent-plugins)
 
 ## Architecture
 
@@ -116,6 +126,9 @@ documented configuration evidence.
 The MVP does not include a web UI, SaaS/API, authentication, database, ZIP
 upload, remote repository ingestion, vendor adapters, automatic fixes, or a
 compatibility score.
+
+Plugin installation trust, enterprise allow/block policies, marketplace
+governance, and runtime approvals are host controls; they are not APV results.
 
 ## Rule catalog
 
