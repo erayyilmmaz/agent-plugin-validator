@@ -24,7 +24,6 @@ public sealed class CliApplicationTests
         Assert.Contains("APV-MCP-020", result.Output);
     }
 
-    [Fact]
     [Theory]
     [InlineData("codex-only")]
     [InlineData("copilot-root")]

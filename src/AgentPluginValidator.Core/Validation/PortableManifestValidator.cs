@@ -76,9 +76,9 @@ public sealed class PortableManifestValidator
         SafePackageReader reader,
         PackageReadFailure failure)
     {
-        if (failure.Code == PackageReadFailureCode.PathNotFound && TryDetectVendorFormat(reader, out var format, out var explanation))
+        if (failure.Code == PackageReadFailureCode.PathNotFound && TryDetectVendorFormat(reader, out var format, out var vendorExplanation))
         {
-            return NotApplicable(format, explanation);
+            return NotApplicable(format, vendorExplanation);
         }
 
         var ruleId = failure.Code is PackageReadFailureCode.SymlinkEscapesRoot or PackageReadFailureCode.PathEscapesRoot

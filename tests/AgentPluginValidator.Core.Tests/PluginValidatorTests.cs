@@ -39,7 +39,6 @@ public sealed class PluginValidatorTests
         Assert.All(report.Components.Skip(1), component => Assert.Equal(ComponentStatus.NotEvaluated, component.Status));
     }
 
-    [Fact]
     [Theory]
     [InlineData("codex-only")]
     [InlineData("copilot-root")]

@@ -77,14 +77,15 @@ public sealed class RegressionFixtureTests
         var root = Path.Combine(FixtureRoot(), "client-extensions");
         var creation = SafePackageReader.TryCreate(root);
         Assert.True(creation.IsSuccess);
+        var reader = Assert.IsType<SafePackageReader>(creation.Reader);
 
-        var report = validator.Validate(creation.Reader!);
+        var report = validator.Validate(reader);
 
         Assert.Equal(ValidationStatus.Valid, report.OverallStatus);
         Assert.Empty(report.Findings);
         Assert.Equal(
             new FileInfo(Path.Combine(root, "plugin.json")).Length,
-            creation.Reader.TotalBytesRead);
+            reader.TotalBytesRead);
     }
 
     private ValidationReport Validate(string fixture) => ValidateAt(Path.Combine(FixtureRoot(), fixture));

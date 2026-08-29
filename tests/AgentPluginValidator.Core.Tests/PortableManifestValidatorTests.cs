@@ -49,7 +49,6 @@ public sealed class PortableManifestValidatorTests
         Assert.Contains(result.Findings, finding => finding.RuleId == expectedRuleId && finding.Severity == FindingSeverity.Error);
     }
 
-    [Fact]
     [Theory]
     [InlineData("codex-only", PackageFormat.CodexPlugin)]
     [InlineData("copilot-root", PackageFormat.CopilotPlugin)]
