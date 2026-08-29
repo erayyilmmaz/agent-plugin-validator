@@ -50,11 +50,18 @@ public sealed class PortableManifestValidatorTests
     }
 
     [Fact]
-    public void Returns_not_applicable_for_a_codex_only_package_without_portable_manifest()
+    [Theory]
+    [InlineData("codex-only", PackageFormat.CodexPlugin)]
+    [InlineData("copilot-root", PackageFormat.CopilotPlugin)]
+    [InlineData("claude-only", PackageFormat.ClaudePlugin)]
+    [InlineData("legacy-openplugin-only", PackageFormat.LegacyOpenPlugin)]
+    public void Returns_not_applicable_for_a_recognized_vendor_only_package(
+        string fixtureName,
+        PackageFormat expectedFormat)
     {
-        var result = ValidateFixture("codex-only");
+        var result = ValidateFixture(fixtureName);
 
-        Assert.Equal(PackageFormat.CodexPlugin, result.Format);
+        Assert.Equal(expectedFormat, result.Format);
         Assert.Equal(ValidationStatus.NotApplicable, result.OverallStatus);
         Assert.Equal(ManifestStatus.NotEvaluated, result.ManifestStatus);
         Assert.False(result.ComponentDiscoveryAllowed);

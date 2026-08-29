@@ -25,9 +25,14 @@ public sealed class CliApplicationTests
     }
 
     [Fact]
-    public void Returns_not_applicable_for_a_recognized_vendor_only_package()
+    [Theory]
+    [InlineData("codex-only")]
+    [InlineData("copilot-root")]
+    [InlineData("claude-only")]
+    [InlineData("legacy-openplugin-only")]
+    public void Returns_not_applicable_for_a_recognized_vendor_only_package(string fixture)
     {
-        var result = Run("validate", Fixture("apv4", "codex-only"));
+        var result = Run("validate", Fixture("apv4", fixture));
 
         Assert.Equal(3, result.ExitCode);
         Assert.Contains("Overall: NOT_APPLICABLE", result.Output);

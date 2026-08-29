@@ -1,0 +1,5 @@
+{
+  "name": "existing-copilot-plugin",
+  "description": "A non-portable Copilot-format manifest without an Agent Plugins schema.",
+  "version": "1.0.0"
+}

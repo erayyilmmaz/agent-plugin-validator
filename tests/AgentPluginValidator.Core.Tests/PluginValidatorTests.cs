@@ -40,9 +40,14 @@ public sealed class PluginValidatorTests
     }
 
     [Fact]
-    public void Reports_recognized_vendor_only_packages_as_not_applicable()
+    [Theory]
+    [InlineData("codex-only")]
+    [InlineData("copilot-root")]
+    [InlineData("claude-only")]
+    [InlineData("legacy-openplugin-only")]
+    public void Reports_recognized_vendor_only_packages_as_not_applicable(string fixture)
     {
-        var report = ValidateFixture("apv4", "codex-only");
+        var report = ValidateFixture("apv4", fixture);
 
         Assert.Equal(ValidationStatus.NotApplicable, report.OverallStatus);
         Assert.All(report.Components, component => Assert.Equal(ComponentStatus.NotEvaluated, component.Status));

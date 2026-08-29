@@ -52,15 +52,15 @@ APV does not use a compatibility percentage, weighted score, or “mostly valid�
 ```text
 explicit local directory
         |
-        +-- recognized vendor-only format and no portable root manifest
+        +-- recognized vendor-only format and no portable schema claim
         |       → Overall NOT_APPLICABLE; APV-FORMAT-001 INFO; do not validate vendor format
         |
-        +-- root plugin.json present, missing, unreadable, or malformed
+        +-- root plugin.json with an explicit $schema, missing, unreadable, or malformed
                 → portable package candidate
                 → validate root manifest
 ```
 
-- A known Codex-, Claude-, Copilot-, or other vendor-only package without a canonical portable root manifest is `NOT_APPLICABLE`.
+- A known Codex-, Claude-, or legacy OpenPlugin marker, or a valid root Copilot manifest without `$schema`, is `NOT_APPLICABLE`. APV does not parse the vendor format.
 - A directory expected to be a portable package but missing root `plugin.json`, or containing malformed/nonconforming `plugin.json`, is `INVALID` under the applicable package/manifest rule.
 - A recognized but unsupported portable Agent Plugins schema version is `INVALID`, not `NOT_APPLICABLE`, because it is still a portable-format conformance claim outside APV V0 support.
 - Invocation errors—such as no argument, an unreadable supplied directory, or invalid CLI option syntax—are **not** package conformance results. They return exit code `2` and a controlled input/usage error.

@@ -35,6 +35,9 @@ public enum PackageFormat
 {
     PortableAgentPlugins,
     CodexPlugin,
+    CopilotPlugin,
+    ClaudePlugin,
+    LegacyOpenPlugin,
     Unknown
 }
 

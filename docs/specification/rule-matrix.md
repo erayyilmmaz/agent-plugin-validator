@@ -89,7 +89,7 @@ APV validates a local directory as untrusted data. It does not execute plugin co
 | Starting a process, connecting/authenticating, handshake success, redirects, or runtime failure | Those are client runtime concerns. Agent Plugins requires resilient runtime behavior, but APV V0 never executes or connects. |
 | Creating/persisting a client-managed `PLUGIN_DATA` directory | Only a client that launches a subprocess has that obligation; APV does not launch one. |
 | SemVer validity, URL reachability, email validity, SPDX validity, or subjective skill-description quality | The specifications do not make these fatal package-validation requirements. |
-| Codex, Claude, Copilot, legacy, or other vendor-specific package conformance | APV V0 validates only portable Agent Plugins 1.0.0. A recognized vendor-only package receives the product status `APV-FORMAT-001` / `NOT_APPLICABLE`, not a portable-conformance error. |
+| Codex, Claude, Copilot, or legacy OpenPlugin package conformance | APV V0 validates only portable Agent Plugins 1.0.0. A recognized non-portable format receives the product status `APV-FORMAT-001` / `NOT_APPLICABLE`, not a portable-conformance error. Vendor semantics are not validated. |
 | Web UI, SaaS, authentication, database, ZIP uploads, dynamic security scans, malware scans, or LLM analysis | Explicit MVP exclusions; see APV-1.4. |
 
 ## Review checklist

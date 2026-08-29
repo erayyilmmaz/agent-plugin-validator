@@ -40,6 +40,13 @@ public sealed class PortableManifestValidator
             }
 
             var manifest = document.RootElement;
+            if (!manifest.TryGetProperty("$schema", out _))
+            {
+                return NotApplicable(
+                    PackageFormat.CopilotPlugin,
+                    "A Copilot-format root plugin.json was found without the canonical portable Agent Plugins schema.");
+            }
+
             ValidateUnknownFields(manifest, findings);
             ValidateSchema(manifest, findings);
             ValidateName(manifest, findings);
@@ -69,20 +76,9 @@ public sealed class PortableManifestValidator
         SafePackageReader reader,
         PackageReadFailure failure)
     {
-        if (failure.Code == PackageReadFailureCode.PathNotFound && HasCodexManifest(reader))
+        if (failure.Code == PackageReadFailureCode.PathNotFound && TryDetectVendorFormat(reader, out var format, out var explanation))
         {
-            return new ManifestValidationResult(
-                PackageFormat.CodexPlugin,
-                ValidationStatus.NotApplicable,
-                ManifestStatus.NotEvaluated,
-                ComponentDiscoveryAllowed: false,
-                new[]
-                {
-                    ManifestRuleRegistry.Create(
-                        "APV-FORMAT-001",
-                        "A Codex-specific plugin manifest was found without a portable root plugin.json.",
-                        "Add a portable Agent Plugins 1.0.0 root plugin.json to request portable conformance validation.")
-                });
+            return NotApplicable(format, explanation);
         }
 
         var ruleId = failure.Code is PackageReadFailureCode.SymlinkEscapesRoot or PackageReadFailureCode.PathEscapesRoot
@@ -101,8 +97,49 @@ public sealed class PortableManifestValidator
         });
     }
 
-    private static bool HasCodexManifest(SafePackageReader reader) =>
-        reader.ReadUtf8Text(".codex-plugin/plugin.json").IsSuccess;
+    private static bool TryDetectVendorFormat(
+        SafePackageReader reader,
+        out PackageFormat format,
+        out string explanation)
+    {
+        foreach (var marker in VendorMarkers)
+        {
+            if (!reader.ReadUtf8Text(marker.Path).IsSuccess)
+            {
+                continue;
+            }
+
+            format = marker.Format;
+            explanation = marker.Explanation;
+            return true;
+        }
+
+        format = PackageFormat.Unknown;
+        explanation = string.Empty;
+        return false;
+    }
+
+    private static ManifestValidationResult NotApplicable(PackageFormat format, string explanation) => new(
+        format,
+        ValidationStatus.NotApplicable,
+        ManifestStatus.NotEvaluated,
+        ComponentDiscoveryAllowed: false,
+        new[]
+        {
+            ManifestRuleRegistry.Create(
+                "APV-FORMAT-001",
+                explanation,
+                "Add a portable Agent Plugins 1.0.0 root plugin.json to request portable conformance validation.")
+        });
+
+    private static readonly VendorMarker[] VendorMarkers =
+    {
+        new(".codex-plugin/plugin.json", PackageFormat.CodexPlugin, "A Codex-specific plugin manifest was found without a portable root plugin.json."),
+        new(".claude-plugin/plugin.json", PackageFormat.ClaudePlugin, "A Claude-format plugin manifest was found without a portable root plugin.json."),
+        new(".plugin/plugin.json", PackageFormat.LegacyOpenPlugin, "A legacy OpenPlugin manifest was found without a portable root plugin.json.")
+    };
+
+    private sealed record VendorMarker(string Path, PackageFormat Format, string Explanation);
 
     private static void ValidateUnknownFields(JsonElement manifest, ICollection<ValidationFinding> findings)
     {

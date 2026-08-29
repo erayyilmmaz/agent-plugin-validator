@@ -12,7 +12,10 @@ Agent Plugin Validator (APV) is an open-source developer tool for deterministic 
 
 The V0 deliverable is a local .NET/C# validation core and CLI. It reads a plugin directory as untrusted static data, explains conformance findings with stable rule IDs and specification references, and never activates plugin-provided content.
 
-APV V0 validates only the portable format. A recognized Codex-, Claude-, Copilot-, or other vendor-only package is reported as `NOT_APPLICABLE`; it is not labeled invalid merely because it is not a portable Agent Plugins 1.0.0 package.
+APV V0 validates only the portable format. A recognized Codex-, Claude-, legacy
+OpenPlugin-, or Copilot-format package is reported as `NOT_APPLICABLE`; it is
+not labeled invalid merely because it is not a portable Agent Plugins 1.0.0
+package. This is format recognition, not vendor conformance validation.
 
 ## V0 in scope
 

@@ -18,20 +18,28 @@ connect to a vendor, fetch a schema, or execute package content.
 | --- | --- | --- |
 | Valid portable manifest | `Valid` | Allowed for APV-5/APV-6, but not performed by APV-4 |
 | Fatal root/manifest failure | `Invalid` | Blocked |
-| Recognized Codex-only package with no root portable manifest | `NotEvaluated` / overall `NotApplicable` | Blocked; vendor format is not validated |
+| Recognized vendor-only package with no portable claim | `NotEvaluated` / overall `NotApplicable` | Blocked; vendor format is not validated |
 
 ## Format decision
 
 1. APV first reads only root `plugin.json` through the contained reader.
-2. A readable root manifest is a portable candidate, including an unsupported
-   `$schema`, which is an `Invalid` portable claim rather than `NotApplicable`.
-3. When root `plugin.json` is absent, APV checks the explicit Codex marker
-   `.codex-plugin/plugin.json`. If it is contained and readable, APV reports
-   `APV-FORMAT-001` at `Info` level and returns `NotApplicable`.
-4. A package without either marker is invalid with `APV-PACKAGE-001`.
+2. A root manifest with the canonical Agent Plugins 1.0.0 `$schema` is a
+   portable candidate. An explicit but unsupported/non-canonical `$schema`
+   remains an `Invalid` portable claim rather than `NotApplicable`.
+3. A readable JSON-object root manifest without `$schema` is classified as the
+   documented Copilot default format and reports `APV-FORMAT-001` at `Info`
+   level with `NotApplicable`.
+4. When root `plugin.json` is absent, APV recognizes the contained marker paths
+   `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, and
+   `.plugin/plugin.json` as Codex, Claude, and legacy OpenPlugin formats.
+   Each returns `NotApplicable` with `APV-FORMAT-001`.
+5. Invalid JSON, a non-object root manifest, an explicit malformed `$schema`,
+   and a package with no known marker remain `Invalid` under the relevant
+   package/manifest rule.
 
-The detector does not parse or validate Codex configuration and does not make
-any vendor conformance or security claim.
+The detector only performs bounded static reads to identify markers. It does
+not parse or validate vendor configuration and does not make any vendor
+conformance or security claim.
 
 ## Manifest rules
 
@@ -56,8 +64,9 @@ resolved locally and URLs/URIs are never dereferenced.
 
 `tests/fixtures/apv4` and `PortableManifestValidatorTests` cover valid full
 metadata, warning-only unknown/extensions behaviour, malformed JSON, missing
-required name, unsupported schema, invalid name/metadata shapes, a Codex-only
-package, and a package with no known format marker.
+required name, unsupported schema, invalid name/metadata shapes, Codex,
+Copilot, Claude, and legacy OpenPlugin formats, and a package with no known
+format marker.
 
 The Release test command completes with 19 passed, 0 failed, 0 skipped. All
 fixtures remain inert data and only the APV test process is executed.
